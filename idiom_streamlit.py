@@ -11,8 +11,10 @@ questions = [
 # Prepare questions by replacing placeholders with appropriate number of blanks
 for i in range(len(questions)):
     num_blanks = len(questions[i][1].split())
-    blanks = ' '.join(['<span style="color:red;">______</span>' for _ in range(num_blanks)])  # Blanks in red
-    questions[i] = (questions[i][0].format(blanks), questions[i][1], questions[i][2])
+    blanks = ' '.join(['______' for _ in range(num_blanks)])
+    # Create a fully redacted question sentence initially
+    redacted_sentence = questions[i][0].replace(questions[i][1], blanks)
+    questions[i] = (redacted_sentence, questions[i][1], questions[i][2], questions[i][0])
 
 # Initialize session state to keep track of the current question index
 if 'index' not in st.session_state:
@@ -23,8 +25,8 @@ def check_answer():
     idx = st.session_state.index
     # Replace blanks with the correct answer highlighted in red
     answer_in_red = ' '.join([f'<span style="color:red;">{word}</span>' for word in questions[idx][1].split()])
-    phrase_with_answer = questions[idx][0].replace(questions[idx][0][questions[idx][0].find('{')+1:questions[idx][0].find('}')], answer_in_red)
-    st.session_state.display_text = phrase_with_answer
+    fully_answered_sentence = questions[idx][3].replace(questions[idx][1], answer_in_red)
+    st.session_state.display_text = fully_answered_sentence
 
 # Function to go to the next question
 def next_question():
