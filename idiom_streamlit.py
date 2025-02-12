@@ -14,9 +14,14 @@ for i in range(len(questions)):
     blanks = ' '.join(['______' for _ in range(num_blanks)])  # Creates the right number of blanks
     questions[i] = (questions[i][0].format(blanks), questions[i][1], questions[i][2], questions[i][0].format(questions[i][1]))
 
-# Initialize session state to keep track of the current question index
-if 'index' not in st.session_state:
+def initialize_quiz():
+    # Initialize or reset quiz state
     st.session_state.index = 0
+    st.session_state.display_text = questions[0][0]
+
+# Initialize session state for the quiz
+if 'display_text' not in st.session_state:
+    initialize_quiz()
 
 # Function to check the answer and replace the blank
 def check_answer():
@@ -33,12 +38,6 @@ def next_question():
     else:
         st.session_state.display_text = "Completed"
 
-# Display the question
-st.markdown("#### ⛳ Example quiz: English idioms")
-st.markdown("---")
-if 'display_text' not in st.session_state:
-    st.session_state.display_text = questions[st.session_state.index][0]
-
 st.markdown(st.session_state.display_text, unsafe_allow_html=True)
 st.caption(questions[st.session_state.index][2])
 
@@ -46,9 +45,12 @@ st.caption(questions[st.session_state.index][2])
 if 'Completed' not in st.session_state.display_text:
     st.button("Check answer", on_click=check_answer)
 
-# Button to move to the next question
-st.button("Next question", on_click=next_question)
+# Button to move to the next question or to restart
+if 'Completed' in st.session_state.display_text:
+    st.button("Restart", on_click=initialize_quiz)
+else:
+    st.button("Next question", on_click=next_question)
 
 # Optionally display 'Completed' when all questions are answered
 if st.session_state.display_text == "Completed":
-    st.markdown("<h2 style='font-size:24px;'>Completed</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='font-size:24px;'>You've completed all questions. Click 'Restart' to try again.</h2>", unsafe_allow_html=True)
