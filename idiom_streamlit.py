@@ -1,10 +1,11 @@
 import streamlit as st
 
 # Sentences with idiomatic phrases, where the preposition is replaced with a dynamically created blank
+# Korean translations are provided for better understanding
 questions = [
-    ("He is completely {} the new project. (enthusiastic)", "on board with", "He is completely involved in the new project."),
-    ("She is not {} talking to large groups. (comfortable)", "at ease with", "She is not comfortable talking to large groups."),
-    ("They are {} visiting us next summer. (excited)", "looking forward to", "They are excited about visiting us next summer.")
+    ("He is completely {} the new project. (enthusiastic)", "on board with", "그는 새 프로젝트에 완전히 동참하고 있습니다."),
+    ("She is not {} talking to large groups. (comfortable)", "at ease with", "그녀는 큰 그룹 앞에서 말하는 것이 편하지 않습니다."),
+    ("They are {} visiting us next summer. (excited)", "looking forward to", "그들은 내년 여름 우리를 방문할 것을 기대하고 있습니다.")
 ]
 
 # Prepare questions by replacing placeholders with appropriate number of blanks
@@ -34,7 +35,7 @@ def next_question():
     else:
         st.session_state.display_text = "Completed"
 
-# Display the question
+# Display the question and translation
 if 'display_text' not in st.session_state or st.session_state.display_text not in ["Completed", questions[st.session_state.index][0]]:
     st.session_state.display_text = questions[st.session_state.index][0]
 
