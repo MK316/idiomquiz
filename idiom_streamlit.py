@@ -34,6 +34,8 @@ def next_question():
         st.session_state.display_text = "Completed"
 
 # Display the question
+st.markdown("#### Example quiz: English idioms")
+st.markdown("---")
 if 'display_text' not in st.session_state:
     st.session_state.display_text = questions[st.session_state.index][0]
 
