@@ -14,14 +14,12 @@ for i in range(len(questions)):
     blanks = ' '.join(['______' for _ in range(num_blanks)])
     questions[i] = (questions[i][0].format(blanks), questions[i][1], questions[i][2])
 
-# Initialize session state to keep track of the current question index and answer visibility
+# Initialize session state to keep track of the current question index
 if 'index' not in st.session_state:
     st.session_state.index = 0
-    st.session_state.show_answer = False
 
 # Function to check the answer and replace the blank
 def check_answer():
-    st.session_state.show_answer = True
     idx = st.session_state.index
     # Replace blanks with the correct answer
     phrase_with_answer = questions[idx][0].replace(' '.join(['______' for _ in questions[idx][1].split()]), questions[idx][1])
@@ -31,24 +29,24 @@ def check_answer():
 def next_question():
     if st.session_state.index < len(questions) - 1:
         st.session_state.index += 1
-        st.session_state.show_answer = False
+        st.session_state.display_text = questions[st.session_state.index][0]
     else:
         st.session_state.display_text = "Completed"
 
-# Display the question and translation
-if 'display_text' not in st.session_state or st.session_state.display_text not in ["Completed", questions[st.session_state.index][0]]:
+# Display the question
+if 'display_text' not in st.session_state:
     st.session_state.display_text = questions[st.session_state.index][0]
 
 st.markdown(f"<h2 style='font-size:24px;'>{st.session_state.display_text}</h2>", unsafe_allow_html=True)
 st.caption(questions[st.session_state.index][2])
 
 # Button to check the answer
-if not st.session_state.show_answer:
+if 'Completed' not in st.session_state.display_text:
     st.button("Check answer", on_click=check_answer)
 
 # Button to move to the next question
 st.button("Next question", on_click=next_question)
 
 # Optionally display 'Completed' when all questions are answered
-if st.session_state.get('display_text', '') == "Completed":
+if st.session_state.display_text == "Completed":
     st.markdown("<h2 style='font-size:24px;'>Completed</h2>", unsafe_allow_html=True)
