@@ -11,7 +11,7 @@ questions = [
 # Prepare questions by replacing placeholders with appropriate number of blanks
 for i in range(len(questions)):
     num_blanks = len(questions[i][1].split())
-    blanks = ' '.join(['______' for _ in range(num_blanks)])
+    blanks = ' '.join(['<span style="color:red;">______</span>' for _ in range(num_blanks)])  # Blanks in red
     questions[i] = (questions[i][0].format(blanks), questions[i][1], questions[i][2])
 
 # Initialize session state to keep track of the current question index
@@ -21,8 +21,9 @@ if 'index' not in st.session_state:
 # Function to check the answer and replace the blank
 def check_answer():
     idx = st.session_state.index
-    # Replace blanks with the correct answer
-    phrase_with_answer = questions[idx][0].replace(' '.join(['______' for _ in questions[idx][1].split()]), questions[idx][1])
+    # Replace blanks with the correct answer highlighted in red
+    answer_in_red = ' '.join([f'<span style="color:red;">{word}</span>' for word in questions[idx][1].split()])
+    phrase_with_answer = questions[idx][0].replace(questions[idx][0][questions[idx][0].find('{')+1:questions[idx][0].find('}')], answer_in_red)
     st.session_state.display_text = phrase_with_answer
 
 # Function to go to the next question
@@ -37,7 +38,7 @@ def next_question():
 if 'display_text' not in st.session_state:
     st.session_state.display_text = questions[st.session_state.index][0]
 
-st.markdown(f"<h2 style='font-size:24px;'>{st.session_state.display_text}</h2>", unsafe_allow_html=True)
+st.markdown(st.session_state.display_text, unsafe_allow_html=True)
 st.caption(questions[st.session_state.index][2])
 
 # Button to check the answer
