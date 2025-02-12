@@ -20,6 +20,9 @@ def initialize_quiz():
     st.session_state.display_text = questions[0][0]
 
 # Initialize session state for the quiz
+st.markdown("⛳ ### Fill in the blank example: idiom quiz")
+st.markdown("---")
+
 if 'display_text' not in st.session_state:
     initialize_quiz()
 
